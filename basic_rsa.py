@@ -5,12 +5,18 @@ import os
 os.chdir(os.path.dirname(os.path.abspath(__file__)))
 
 
-def encrypt(message, key: RSA.RsaKey):
+def encrypt(message: bytes, key: RSA.RsaKey):
     return pow(bytes_to_long(message), key.e, key.n)
 
-def decrypt(cipher, key: RSA.RsaKey):
+def decrypt(cipher: int, key: RSA.RsaKey):
     return pow(cipher, key.d, key.n)
 
+def print_key(key):
+    print(f"n: {key.n}")
+    print(f"e: {key.e}")
+    print(f"d: {key.d}")
+    print(f"p: {key.p}")
+    print(f"q: {key.q}")
 
 def main():
     
@@ -18,10 +24,6 @@ def main():
 
     # print(key.export_key())
     # print(key.publickey().export_key())
-    # print(key.q)
-    # print(key.p)
-    # print(key.n)
-    # print(key.e)
 
 
     cipher = encrypt(message, key)
