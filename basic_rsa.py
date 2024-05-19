@@ -35,7 +35,7 @@ def run_until_pass(func):
     return wrapper
 
 @run_until_pass
-def gen_keys(bits, e = 65537):
+def gen_keys(bits, e = 65537, d = None):
     half_bits = bits // 2
 
     p = getPrime(half_bits)
@@ -48,10 +48,15 @@ def gen_keys(bits, e = 65537):
 
     phi = (p - 1) * (q - 1)
 
-    if GCD(e, phi) != 1:
-        raise ValueError("e and phi are not coprime")
+    if d is None:
+        if GCD(e, phi) != 1:
+            raise ValueError("e and phi are not coprime")
 
-    d = inverse(e, phi)
+        d = inverse(e, phi)
+    else:
+        e = inverse(d, phi)
+        if GCD(e, phi) != 1:
+            raise ValueError("e and phi are not coprime")
 
     key = RSA.construct((n, e, d, p, q))
 
