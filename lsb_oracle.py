@@ -1,43 +1,10 @@
 from Crypto.PublicKey import RSA
 from Crypto.Util.number import bytes_to_long, long_to_bytes
-from Crypto.Util.number import getPrime, inverse, GCD
-from basic_rsa import print_key, encrypt, decrypt
+from basic_rsa import print_key, encrypt, decrypt, gen_keys
 import os
 os.chdir(os.path.dirname(os.path.abspath(__file__)))
 
 STR_PAD = 20
-
-def run_until_pass(func):
-    def wrapper(*args, **kwargs):
-        while True:
-            try:
-                return func(*args, **kwargs)
-            except ValueError:
-                pass
-    return wrapper
-
-@run_until_pass
-def gen_keys(bits, e = 65537):
-    half_bits = bits // 2
-
-    p = getPrime(half_bits)
-    q = getPrime(half_bits)
-
-    while p == q:
-        q = getPrime(half_bits)
-
-    n = p * q
-
-    phi = (p - 1) * (q - 1)
-
-    if GCD(e, phi) != 1:
-        raise ValueError("e and phi are not coprime")
-
-    d = inverse(e, phi)
-
-    key = RSA.construct((n, e, d, p, q))
-
-    return key
 
 def bytes_to_bits(b):
     if isinstance(b, bytes):

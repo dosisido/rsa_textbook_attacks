@@ -1,6 +1,7 @@
 from typing import Union
 from Crypto.PublicKey import RSA
 from Crypto.Util.number import long_to_bytes, bytes_to_long
+from Crypto.Util.number import getPrime, inverse, GCD
 from secret import message
 import os
 os.chdir(os.path.dirname(os.path.abspath(__file__)))
@@ -23,6 +24,38 @@ def print_key(key):
     print(f"d: {key.d}")
     print(f"p: {key.p}")
     print(f"q: {key.q}")
+
+def run_until_pass(func):
+    def wrapper(*args, **kwargs):
+        while True:
+            try:
+                return func(*args, **kwargs)
+            except ValueError:
+                pass
+    return wrapper
+
+@run_until_pass
+def gen_keys(bits, e = 65537):
+    half_bits = bits // 2
+
+    p = getPrime(half_bits)
+    q = getPrime(half_bits)
+
+    while p == q:
+        q = getPrime(half_bits)
+
+    n = p * q
+
+    phi = (p - 1) * (q - 1)
+
+    if GCD(e, phi) != 1:
+        raise ValueError("e and phi are not coprime")
+
+    d = inverse(e, phi)
+
+    key = RSA.construct((n, e, d, p, q))
+
+    return key
 
 def main():
     
