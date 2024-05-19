@@ -1,0 +1,3 @@
+[submodule "rsa_wiener-attack"]
+	path = rsa_wiener-attack
+	url = https://github.com/pablocelayes/rsa-wiener-attack/
