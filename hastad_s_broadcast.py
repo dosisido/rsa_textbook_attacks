@@ -1,10 +1,8 @@
 from Crypto.PublicKey import RSA
 from Crypto.Util.number import long_to_bytes, bytes_to_long
 from secret import message
-from primefac import introot
 from basic_rsa import encrypt, decrypt
-from egcd import egcd
-from crt import crt
+from tools import crt, egcd
 import os
 os.chdir(os.path.dirname(os.path.abspath(__file__)))
 
@@ -28,6 +26,7 @@ def generates_ciphers():
     return ciphers
 
 def hastad_broadcast_attack(ciphers, mods):
+    from primefac import introot
     assert len(ciphers) == len(mods)
     res = crt(ciphers, mods)
     dec_int = introot(res, len(ciphers))

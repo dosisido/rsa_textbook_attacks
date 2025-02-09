@@ -1,8 +1,8 @@
 from typing import Union
 from Crypto.PublicKey import RSA
 from Crypto.Util.number import long_to_bytes, bytes_to_long
-from Crypto.Util.number import getPrime, inverse, GCD
-from secret import message
+from Crypto.Util.number import getPrime, inverse
+from math import gcd
 import os
 os.chdir(os.path.dirname(os.path.abspath(__file__)))
 
@@ -49,13 +49,13 @@ def gen_keys(bits, e = 65537, d = None):
     phi = (p - 1) * (q - 1)
 
     if d is None:
-        if GCD(e, phi) != 1:
+        if gcd(e, phi) != 1:
             raise ValueError("e and phi are not coprime")
 
         d = inverse(e, phi)
     else:
         e = inverse(d, phi)
-        if GCD(e, phi) != 1:
+        if gcd(e, phi) != 1:
             raise ValueError("e and phi are not coprime")
 
     key = RSA.construct((n, e, d, p, q))
@@ -63,21 +63,15 @@ def gen_keys(bits, e = 65537, d = None):
     return key
 
 def main():
+    from secret import message
     
     key = RSA.generate(2**11)
-
-    # print(key.export_key())
-    # print(key.publickey().export_key())
-
 
     cipher = encrypt(message, key)
     print(f"{long_to_bytes(cipher).hex()= }")
 
     plain = decrypt(cipher, key)
     print(f"{long_to_bytes(plain).decode()= }")
-
-
-    pass
 
 if __name__ == "__main__":
     main()

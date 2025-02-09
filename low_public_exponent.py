@@ -1,10 +1,13 @@
 from Crypto.PublicKey import RSA
 from Crypto.Util.number import long_to_bytes, bytes_to_long
 from secret import message
-from primefac import introot
 from basic_rsa import encrypt, decrypt
 import os
 os.chdir(os.path.dirname(os.path.abspath(__file__)))
+
+def low_public_exponent_attack(cipher, key):
+    from primefac import introot
+    return introot(cipher, key.e)
 
 
 def main():
@@ -12,7 +15,7 @@ def main():
 
     cipher = encrypt(message, key)
 
-    decoded = introot(cipher, key.e)
+    decoded = low_public_exponent_attack(cipher, key)
     print(f"{decoded= }")
     print(f"{long_to_bytes(decoded).decode()= }")
 

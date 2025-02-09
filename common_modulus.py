@@ -1,17 +1,11 @@
 from Crypto.PublicKey import RSA
 from Crypto.Util.number import long_to_bytes, bytes_to_long
-from egcd import egcd
-from secret import message
+from tools import egcd
+from basic_rsa import encrypt, decrypt
 from math import gcd
 import os
 os.chdir(os.path.dirname(os.path.abspath(__file__)))
 
-
-def encrypt(message, key: RSA.RsaKey):
-    return pow(bytes_to_long(message), key.e, key.n)
-
-def decrypt(cipher, key: RSA.RsaKey):
-    return pow(cipher, key.d, key.n)
 
 def common_modulus_attack(cipher1:int, cipher2:int, e1:int , e2:int , n:int ):
     """ 
@@ -26,6 +20,7 @@ def common_modulus_attack(cipher1:int, cipher2:int, e1:int , e2:int , n:int ):
 
 
 def main():
+    from secret import message
     key1 = RSA.generate(2**11)
     assert gcd(17, key1.n) == 1
     key2 = RSA.construct((key1.n, 17))

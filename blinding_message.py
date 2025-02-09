@@ -1,27 +1,31 @@
 from Crypto.PublicKey import RSA
 from basic_rsa import encrypt, decrypt
 from Crypto.Util.number import long_to_bytes
-from secret import message
 import os
 os.chdir(os.path.dirname(os.path.abspath(__file__)))
 
 
+def get_messages_to_encrypt(enc_flag: int, key: RSA.RsaKey):
+    return 2**key.e * enc_flag % key.n
+
+def blind_message(encrypted: int, key: RSA.RsaKey):
+    inv_2 = pow(2, -1, key.n)
+    return encrypted * inv_2 % key.n
 
 
 
 def main():
+    from secret import message
     key = RSA.generate(2**10)
-
 
     # this is done on the server
     enc_flag = encrypt(message, key)
 
 
     # let's suppose i can decript anyting besides the flag
-    c = 2**key.e * enc_flag % key.n
+    c = get_messages_to_encrypt(enc_flag, key)
     two_m = decrypt(c, key)
-    inv_2 = pow(2, -1, key.n)
-    m = two_m * inv_2 % key.n
+    m = blind_message(two_m, key)
 
 
     print("Decrypted message:", long_to_bytes(m).decode())

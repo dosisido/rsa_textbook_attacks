@@ -1,16 +1,11 @@
 import os
 os.chdir(os.path.dirname(os.path.abspath(__file__)))
-from Crypto.Util.number import getPrime, getRandomInteger
-from factordb.factordb import FactorDB
-from gmpy2 import next_prime, isqrt
-from primefac import primefac, multifactor
-
-
-n_length = 30
+from Crypto.Util.number import getPrime
 
 
 
 def factor_db(n):
+    from factordb.factordb import FactorDB
     f = FactorDB(n)
     f.connect()
     factor_list = f.get_factor_list()
@@ -21,6 +16,7 @@ def factor_db(n):
     return tuple(factor_list)
 
 def fermat(n):
+    from gmpy2 import isqrt
     a = isqrt(n)
     b = a
     b2 = pow(a,2) - n
@@ -43,6 +39,7 @@ def fermat(n):
     return tuple(factor_list)
 
 def primefac_lib(n):
+    from primefac import primefac, multifactor
     primes = []
     while n != 1:
         primes.append(multifactor(n)[0])
@@ -51,6 +48,7 @@ def primefac_lib(n):
     return tuple(primes)
 
 def main():
+    n_length = 30
     p1 = getPrime(n_length)
     p2 = getPrime(n_length)
     n = p1 * p2
