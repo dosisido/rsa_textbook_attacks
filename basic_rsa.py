@@ -5,6 +5,7 @@ from Crypto.Util.number import getPrime, inverse
 from math import gcd
 import os
 os.chdir(os.path.dirname(os.path.abspath(__file__)))
+some_primes = [3, 5, 7, 11, 13, 17, 19, 23, 29, 31, 37, 41, 43, 47]
 
 
 def encrypt(message: Union[int, bytes], key: RSA.RsaKey):
@@ -27,25 +28,38 @@ def print_key(key):
 
 def run_until_pass(func):
     def wrapper(*args, **kwargs):
+        index = 0
         while True:
             try:
                 return func(*args, **kwargs)
-            except ValueError:
+            except ValueError as e:
+                if index >= len(some_primes):
+                    raise e
+                e = some_primes[index]
+                if "e" in kwargs:
+                    raise ValueError("Impossible to find a key with the given parameters")
+                kwargs["e"] = e
+                index += 1
                 pass
     return wrapper
 
 @run_until_pass
-def gen_keys(bits, e = 65537, d = None):
-    half_bits = bits // 2
+def gen_keys(key: Union[int, list[int]], e = 65537, d = None):
+    if isinstance(key, int):
+        half_bits = key // 2
 
-    p = getPrime(half_bits)
-    q = getPrime(half_bits)
-
-    while p == q:
+        p = getPrime(half_bits)
         q = getPrime(half_bits)
 
-    n = p * q
+        while p == q:
+            q = getPrime(half_bits)
+    
+    if isinstance(key, list) and len(key) == 2:
+        p, q = key
+        assert p != q
+        
 
+    n = p * q
     phi = (p - 1) * (q - 1)
 
     if d is None:
@@ -65,13 +79,17 @@ def gen_keys(bits, e = 65537, d = None):
 def main():
     from secret import message
     
-    key = RSA.generate(2**11)
+    # key = RSA.generate(2**11)
 
-    cipher = encrypt(message, key)
-    print(f"{long_to_bytes(cipher).hex()= }")
+    # cipher = encrypt(message, key)
+    # print(f"{long_to_bytes(cipher).hex()= }")
 
-    plain = decrypt(cipher, key)
-    print(f"{long_to_bytes(plain).decode()= }")
+    # plain = decrypt(cipher, key)
+    # print(f"{long_to_bytes(plain).decode()= }")
+
+    key = gen_keys([3, 11])
+    print_key(key)
+
 
 if __name__ == "__main__":
     main()
