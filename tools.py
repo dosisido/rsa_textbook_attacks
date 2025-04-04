@@ -1,10 +1,11 @@
 
-def egcd(a, b):
-    if a == 0:
-        return b, 0, 1
-    else:
-        g, y, x = egcd(b % a, a)
-        return g, x - (b // a) * y, y
+def egcd(a: int, b: int):
+    x0, x1, y0, y1 = 1, 0, 0, 1
+    while b != 0:
+        q, a, b = a // b, b, a % b
+        x0, x1 = x1, x0 - q * x1
+        y0, y1 = y1, y0 - q * y1
+    return a, x0, y0
 
 def chinese_remainder(A: list, M:list):
     from functools import reduce
@@ -18,10 +19,19 @@ def chinese_remainder(A: list, M:list):
     return sum % n
 
 
-def mul_inv(a, b):
-    g, x, y = egcd(a, b)
+def mul_inv(val:int, mod:int) -> int:
+    g, x, y = egcd(val, mod)
     if g != 1:
         raise Exception('Modular inverse does not exist')
     else:
-        return x % b
+        return x % mod
 
+def modular_multiplication(a: int, b: int, n: int) -> int:
+    res = 0
+    a %= n
+    while b:
+        if b & 1:
+            res = (res + a) % n
+        a = (2 * a) % n
+        b >>= 1
+    return res

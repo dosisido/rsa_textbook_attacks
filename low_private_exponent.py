@@ -1,16 +1,18 @@
-from basic_rsa import gen_keys, print_key
-import os
-os.chdir(os.path.dirname(os.path.abspath(__file__)))
+
+
+def wiener_attack(e, n):
+    from owiener import attack
+    return attack(e, n)
 
 
 def main():
-    from owiener import attack as wiener_attack
+    from basic_rsa import gen_keys, print_key
     
     key = gen_keys(100, d=17)
     print_key(key)
 
-    found_d = wiener_attack(key.e, key.n)
-    print("Found d:", found_d)
+    d = wiener_attack(key.e, key.n)
+    print("Found d:", d)
 
 
 if __name__ == "__main__":

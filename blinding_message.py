@@ -1,22 +1,24 @@
 from Crypto.PublicKey import RSA
-from basic_rsa import encrypt, decrypt
+from rsa_textbook_attacks.basic_rsa import encrypt, decrypt
+from rsa_textbook_attacks.tools import modular_multiplication
 from Crypto.Util.number import long_to_bytes
-import os
-os.chdir(os.path.dirname(os.path.abspath(__file__)))
 
 
-def get_messages_to_encrypt(enc_flag: int, key: RSA.RsaKey):
-    return 2**key.e * enc_flag % key.n
+# def get_messages_to_encrypt(enc_flag: int, key: RSA.RsaKey) -> int:
+#     return (pow(2, key.e, key.n) * enc_flag) % key.n
 
-def blind_message(encrypted: int, key: RSA.RsaKey):
-    inv_2 = pow(2, -1, key.n)
-    return encrypted * inv_2 % key.n
+def get_messages_to_encrypt(enc_flag: int, key: RSA.RsaKey) -> int:
+    return modular_multiplication(pow(2, key.e, key.n), enc_flag, key.n)
+
+def blind_message(encrypted: int, n: int) -> int:
+    inv_2 = pow(2, -1, n)
+    return encrypted * inv_2 % n
 
 
 
 def main():
     from secret import message
-    key = RSA.generate(2**10)
+    key = RSA.generate(1024)
 
     # this is done on the server
     enc_flag = encrypt(message, key)

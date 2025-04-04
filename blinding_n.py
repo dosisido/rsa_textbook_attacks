@@ -1,8 +1,3 @@
-from Crypto.PublicKey import RSA
-from basic_rsa import encrypt, gen_keys
-from math import gcd
-import os
-os.chdir(os.path.dirname(os.path.abspath(__file__)))
 
 VALUES_TO_ENCRYPT = [2, 3]
 
@@ -10,13 +5,15 @@ def get_messages_to_encrypt() -> list[int]:
     return VALUES_TO_ENCRYPT
 
 def blind_n(encryped: list, e: int) -> int:
+    from math import gcd
     assert len(encryped) == 2
     c1, c2 = encryped
     a, b = VALUES_TO_ENCRYPT
     return gcd(a**e - c1, b**e - c2)
 
 
-def main():
+if __name__ == "__main__":
+    from .basic_rsa import encrypt, gen_keys
     key = gen_keys(2**10)
     print(f"original n: {key.n}")
 
@@ -35,8 +32,3 @@ def main():
 
     if abs(key.n - N) != 0:
         print(f"found N: {N}")
-
-    pass
-
-if __name__ == "__main__":
-    main()

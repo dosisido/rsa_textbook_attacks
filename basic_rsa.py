@@ -3,8 +3,6 @@ from Crypto.PublicKey import RSA
 from Crypto.Util.number import long_to_bytes, bytes_to_long
 from Crypto.Util.number import getPrime, inverse
 from math import gcd
-import os
-os.chdir(os.path.dirname(os.path.abspath(__file__)))
 some_primes = [3, 5, 7, 11, 13, 17, 19, 23, 29, 31, 37, 41, 43, 47]
 
 
@@ -44,7 +42,7 @@ def run_until_pass(func):
     return wrapper
 
 @run_until_pass
-def gen_keys(key: Union[int, list[int]], e = 65537, d = None):
+def gen_keys(key: Union[int, list[int]], e = 65537, d = None) -> RSA.RsaKey:
     if isinstance(key, int):
         half_bits = key // 2
 

@@ -1,13 +1,11 @@
 from Crypto.PublicKey import RSA
 from Crypto.Util.number import long_to_bytes, bytes_to_long
-from tools import egcd
-from basic_rsa import encrypt, decrypt
+from .basic_rsa import encrypt, decrypt
 from math import gcd
-import os
-os.chdir(os.path.dirname(os.path.abspath(__file__)))
 
 
 def common_modulus_attack(cipher1:int, cipher2:int, e1:int , e2:int , n:int ):
+    from egcd import egcd
     """ 
         finds the original message when it's encrypted with two different public keys with the same modulus
 

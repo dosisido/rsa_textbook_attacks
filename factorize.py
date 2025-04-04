@@ -4,7 +4,7 @@ from Crypto.Util.number import getPrime
 
 
 
-def factor_db(n):
+def factor_db(n) -> list[int]:
     from factordb.factordb import FactorDB
     f = FactorDB(n)
     f.connect()
@@ -15,7 +15,7 @@ def factor_db(n):
     factor_list.sort()
     return tuple(factor_list)
 
-def fermat(n):
+def fermat(n) -> list[int]:
     from gmpy2 import isqrt
     a = isqrt(n)
     b = a
@@ -38,7 +38,7 @@ def fermat(n):
     factor_list.sort()
     return tuple(factor_list)
 
-def primefac_lib(n):
+def primefac_lib(n) -> list[int]:
     from primefac import primefac, multifactor
     primes = []
     while n != 1:
