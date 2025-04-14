@@ -1,7 +1,7 @@
 from typing import Union
 from math import gcd
 
-class CommonPrimes:
+class common_primes:
     modulus = set()
 
     def __init__(self, modulus: set[int] = None):
@@ -26,10 +26,10 @@ def main():
     from Crypto.Util.number import getPrime
     import random
 
-    primes = [getPrime(10) for _ in range(100)]
+    primes = [getPrime(100) for _ in range(1000)]
 
-    common_primes = CommonPrimes()
-    for _ in range(1000):
+    common_primes = common_primes()
+    for _ in range(len(primes)*10):
         p = random.choice(primes)
         q = random.choice(primes)
         if p == q: continue

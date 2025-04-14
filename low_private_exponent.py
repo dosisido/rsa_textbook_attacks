@@ -1,17 +1,21 @@
 
 
-def wiener_attack(e, n):
-    from owiener import attack
-    return attack(e, n)
+class low_private_exponent():
+    def wiener(e, n):
+        from owiener import attack
+        return attack(e, n)
 
+    def boneh_durfee():
+        raise NotImplementedError("Launch the boneh_durfee.sage script")
 
 def main():
-    from basic_rsa import gen_keys, print_key
-    
+    from rsa_textbook_attacks.basic_rsa import gen_keys, print_key
+    attack = low_private_exponent()
+
     key = gen_keys(100, d=17)
     print_key(key)
 
-    d = wiener_attack(key.e, key.n)
+    d = attack.wiener(key.e, key.n)
     print("Found d:", d)
 
 

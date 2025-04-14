@@ -1,21 +1,21 @@
 from Crypto.PublicKey import RSA
-from Crypto.Util.number import long_to_bytes, bytes_to_long
-from .basic_rsa import encrypt, decrypt
-import os
-os.chdir(os.path.dirname(os.path.abspath(__file__)))
+from Crypto.Util.number import long_to_bytes
+from rsa_textbook_attacks.basic_rsa import encrypt
 
-def low_public_exponent_attack(cipher: int, e: int):
-    from primefac import introot
-    return introot(cipher, e)
+
+class low_public_exponent():
+    def attack(self, cipher: int, e: int) -> int:
+        from primefac import introot
+        return introot(cipher, e)
 
 
 def main():
-    from secret import message
     key = RSA.generate(2**10, e=3)
+    attack = low_public_exponent()
 
-    cipher = encrypt(message, key)
+    cipher = encrypt(b"flag{dosisido}", key)
 
-    decoded = low_public_exponent_attack(cipher, key.e)
+    decoded = attack.attack(cipher, key.e)
     print(f"{decoded= }")
     print(f"{long_to_bytes(decoded).decode()= }")
 

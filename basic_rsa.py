@@ -17,7 +17,7 @@ def encrypt(message: Union[int, bytes], key: RSA.RsaKey):
 def decrypt(cipher: int, key: RSA.RsaKey):
     return pow(cipher, key.d, key.n)
 
-def print_key(key):
+def print_key(key: RSA.RsaKey):
     print(f"n: {key.n}")
     print(f"e: {key.e}")
     print(f"d: {key.d}")
@@ -75,8 +75,7 @@ def gen_keys(key: Union[int, list[int]], e = 65537, d = None) -> RSA.RsaKey:
     return key
 
 def main():
-    from secret import message
-    
+    message = b"flag{dosisido}"    
     # key = RSA.generate(2**11)
 
     # cipher = encrypt(message, key)

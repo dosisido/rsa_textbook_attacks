@@ -4,7 +4,7 @@ from collections.abc import Callable
 from Crypto.Util.number import bytes_to_long, long_to_bytes
 
 
-BITS_LEAKED = 1
+__BITS_LEAKED = 1
 __PRINT = False
 __STR_PAD = 20
 __oracle_key = gen_keys(512)
@@ -40,7 +40,7 @@ def _bytes_to_bits(b: bytes) -> str:
     return ''.join(['1' if bit == '1' else '0' for bit in bin(b)[2:].zfill(8)])
 
 def _int_to_bits(i: int) -> str:
-    return ''.join(['1' if bit == '1' else '0' for bit in bin(i)[2:].zfill(BITS_LEAKED)])
+    return ''.join(['1' if bit == '1' else '0' for bit in bin(i)[2:].zfill(__BITS_LEAKED)])
 
 def print_bounds(bounds: tuple[int, int]) -> None:
     print("[" + str(bounds[0]) + "," + str(bounds[1]) + "]")
@@ -60,39 +60,47 @@ def __oracle(ciphertext: int) -> int:
     # nel momento in cui 2m supera n il risultato è 2m % n = 2m - n
     # essendo n sempre dispari, 2m sarà sempre pari e 2m - n sarà sempre dispari
 
-    lsb =  dec % (2 ** BITS_LEAKED)
+    lsb =  dec % (2 ** __BITS_LEAKED)
     return lsb
 
-def ls_oracle_attack(c: int, key: RSA.RsaKey, oracle: Callable[[int], int]) -> int:
-    print(f"LSB oracle attack with {BITS_LEAKED} bits leaked")
-    bounds = (0, key.n)
-    for _ in range(key.n.bit_length() // BITS_LEAKED):
-        c = (pow(2**BITS_LEAKED, key.e, key.n) * c) % key.n
 
-        bits = oracle(c)
-        bits = _int_to_bits(bits)
-        if __PRINT: print(f"Received bits: {bits}")
+class lsb_oracle_attack():
+    BITS_LEAKED = 1
+    PRINT = False
 
-        for bit in bits[::]:
-            bit = int(bit)
-            if  bit == 0:
-                bounds = (bounds[0], (bounds[1] + bounds[0]) // 2)
-            elif bit == 1:
-                bounds = ((bounds[1] + bounds[0]) // 2, bounds[1])
-            else:
-                print(bits, bit, type(bits), type(bit), len(bits), len(bit))
-                raise ValueError("Invalid bit")
+    def attack(self, c: int, key: RSA.RsaKey, oracle: Callable[[int], int]) -> int:
+        print(f"LSB oracle attack with {self.BITS_LEAKED} bits leaked")
+        bounds = (0, key.n)
+        for _ in range(key.n.bit_length() // self.BITS_LEAKED):
+            c = (pow(2**self.BITS_LEAKED, key.e, key.n) * c) % key.n
+
+            bits = oracle(c)
+            bits = _int_to_bits(bits)
+            if self.PRINT: print(f"Received bits: {bits}")
+
+            for bit in bits[::]:
+                bit = int(bit)
+                if  bit == 0:
+                    bounds = (bounds[0], (bounds[1] + bounds[0]) // 2)
+                elif bit == 1:
+                    bounds = ((bounds[1] + bounds[0]) // 2, bounds[1])
+                else:
+                    print(bits, bit, type(bits), type(bit), len(bits), len(bit))
+                    raise ValueError("Invalid bit")
+            
         
-        # print_bounds(bounds)
-        # number_line(key.n, bounds[0], bounds[1])
-    
-    return bounds[0]
+        return bounds[0]
 
 if __name__ == "__main__":
     __PRINT = False
-    m = b"ctf{dosi!}"
+    __BITS_LEAKED = 3
+
+    m = b"flag{dosisido}"
     c = encrypt(m, __oracle_key)
-    
+    attack = lsb_oracle_attack()
+    attack.BITS_LEAKED = __BITS_LEAKED
+    attack.PRINT = __PRINT
+
     if __PRINT: print(
         "Original message:".ljust(__STR_PAD),
         str(_bytes_to_bits(m)).ljust(13),
@@ -106,5 +114,5 @@ if __name__ == "__main__":
         str(c).rjust(4)
     )
 
-    r = ls_oracle_attack(c, __oracle_key, __oracle)
+    r = attack.attack(c, __oracle_key, __oracle)
     print(f"Recovered message: {long_to_bytes(r)}")
