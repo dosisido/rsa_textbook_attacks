@@ -1,7 +1,7 @@
 from Crypto.Util.number import getPrime
 
 
-class factorize():
+class Factorize():
 
     @staticmethod
     def factor_db(n) -> list[int]:
@@ -50,7 +50,7 @@ class factorize():
         return tuple(primes)
 
 def main():
-    fac = factorize()
+    fac = Factorize()
     n_length = 30
     p1 = getPrime(n_length)
     p2 = getPrime(n_length)

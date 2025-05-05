@@ -1,7 +1,7 @@
 from typing import Union
 from math import gcd
 
-class common_primes:
+class CommonPrimes:
     modulus = set()
 
     def __init__(self, modulus: set[int] = None):

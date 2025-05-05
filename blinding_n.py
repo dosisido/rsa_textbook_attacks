@@ -1,5 +1,5 @@
 
-class blinding_n():
+class BlindingN():
     values_to_encrypt = [2, 3]
     values_to_encrypt_no_e = [2, 3, 5]
     
@@ -16,6 +16,15 @@ class blinding_n():
         return self.values_to_encrypt_no_e + [x**2 for x in self.values_to_encrypt_no_e]
 
     def blind_n(self, encryped: list, e: int = 65537) -> int:
+        """
+        c1 = m1^e mod N  
+        c2 = m2^e mod N  
+
+        m1^e - c1 = 0 mod N = k1 * N  
+        m2^e - c2 = 0 mod N = k2 * N  
+
+        gcd(m1^e - c1, m2^e - c2) = gcd(k1 * N, k2 * N) = N
+        """
         from math import gcd
         assert len(encryped) == 2
         c1, c2 = encryped
@@ -38,7 +47,7 @@ if __name__ == "__main__":
     from rsa_textbook_attacks.basic_rsa import encrypt, gen_keys
     key = gen_keys(2**10)
     # print(f"original n: {key.n}")
-    attack = blinding_n()
+    attack = BlindingN()
 
     # one way to blindly get N is to encrypt -1
     print("Encrypting -1")

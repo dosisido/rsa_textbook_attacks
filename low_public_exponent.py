@@ -3,7 +3,7 @@ from Crypto.Util.number import long_to_bytes
 from rsa_textbook_attacks.basic_rsa import encrypt
 
 
-class low_public_exponent():
+class LowPublicExponent():
     def attack(self, cipher: int, e: int) -> int:
         from primefac import introot
         return introot(cipher, e)
@@ -11,7 +11,7 @@ class low_public_exponent():
 
 def main():
     key = RSA.generate(2**10, e=3)
-    attack = low_public_exponent()
+    attack = LowPublicExponent()
 
     cipher = encrypt(b"flag{dosisido}", key)
 

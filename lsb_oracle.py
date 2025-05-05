@@ -69,7 +69,7 @@ def __oracle(ciphertext: int) -> int:
     return lsb
 
 
-class lsb_oracle_attack():
+class LsbOracleAttack():
     BITS_LEAKED = 1
     PRINT = False
 
@@ -123,7 +123,7 @@ if __name__ == "__main__":
 
     m = b"flag{dosisido}"
     c = encrypt(m, __oracle_key)
-    attack = lsb_oracle_attack()
+    attack = LsbOracleAttack()
     attack.BITS_LEAKED = __BITS_LEAKED
     attack.PRINT = __PRINT
 

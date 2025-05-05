@@ -1,6 +1,6 @@
 
 
-class low_private_exponent():
+class LowPrivateExponent():
     def wiener(e, n):
         from owiener import attack
         return attack(e, n)
@@ -10,7 +10,7 @@ class low_private_exponent():
 
 def main():
     from rsa_textbook_attacks.basic_rsa import gen_keys, print_key
-    attack = low_private_exponent()
+    attack = LowPrivateExponent()
 
     key = gen_keys(100, d=17)
     print_key(key)

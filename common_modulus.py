@@ -4,18 +4,17 @@ from rsa_textbook_attacks.basic_rsa import encrypt, decrypt
 from math import gcd
 
 
-class common_modulus():
+class CommonModulus():
     @staticmethod
     def attack(cipher1:int, cipher2:int, e1:int , e2:int , n:int ):
-        from egcd import egcd
         """ 
-            finds the original message when it's encrypted with two different public keys with the same modulus
-
-            egcd finds u,v such that u*e1 + v*e2 = 1
-
-            then c1^u * c2^v = m^e1*u * m^e2*v = m^(e1*u+e2*v) = m
+        finds the original message when it's encrypted with two different public keys with the same modulus  
+        egcd finds u,v such that u\*e1 + v\*e2 = 1  
+        then c1^u \* c2^v = m^e1\*u \* m^e2\*v = m^(e1\*u+e2\*v) = m  
         """
-        _, u, v = egcd(e1, e2)
+        from egcd import egcd
+        r, u, v = egcd(e1, e2)
+        assert r == 1, "e1 and e2 are not coprime"
         return pow(cipher1, u, n) * pow(cipher2, v, n) % n
 
 
@@ -28,7 +27,7 @@ def main():
     enc1 = encrypt(message, key1)
     enc2 = encrypt(message, key2)
 
-    attack = common_modulus()
+    attack = CommonModulus()
     dec = attack.attack(enc1, enc2, key1.e, key2.e, key1.n)
     print(f"{long_to_bytes(dec).decode()= }")
 

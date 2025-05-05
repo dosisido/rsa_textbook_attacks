@@ -6,7 +6,7 @@ from rsa_textbook_attacks.tools import chinese_remainder
 __E = 3
 
 
-class hastad_broadcast():
+class HastadBroadcast():
     def attack(self, ciphers: list[int], mods: list[int]) -> bytes:
         from primefac import introot
         assert len(ciphers) == len(mods)
@@ -29,7 +29,7 @@ def main():
         mods.append(key.n)
     print("Generated ciphers")
 
-    attack = hastad_broadcast()
+    attack = HastadBroadcast()
     res = attack.attack(ciphers, mods)
     res = long_to_bytes(res).decode()
     print("Decrypted message:", res)
