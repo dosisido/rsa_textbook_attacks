@@ -4,7 +4,7 @@ from math import gcd
 class CommonPrimes:
     modulus = set()
 
-    def __init__(self, modulus: set[int] = None):
+    def __init__(self, modulus: set[int] | None = None):
         if modulus is not None:
             self.modulus = set(modulus)
         else:

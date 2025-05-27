@@ -1,10 +1,14 @@
 
 
+from typing import Optional
+
 class LowPrivateExponent():
-    def wiener(e, n):
+    @staticmethod
+    def wiener(e: int, n: int) -> Optional[int]:
         from owiener import attack
         return attack(e, n)
 
+    @staticmethod
     def boneh_durfee():
         raise NotImplementedError("Launch the boneh_durfee.sage script")
 

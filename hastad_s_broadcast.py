@@ -7,11 +7,13 @@ __E = 3
 
 
 class HastadBroadcast():
-    def attack(self, ciphers: list[int], mods: list[int]) -> bytes:
+    def attack(self, ciphers: list[int], mods: list[int]) -> int:
         from primefac import introot
         assert len(ciphers) == len(mods)
         res = chinese_remainder(ciphers, mods)
         dec_int = introot(res, len(ciphers))
+        if dec_int is None:
+            raise ValueError("Failed to find integer root, check inputs.")
         return dec_int
 
 

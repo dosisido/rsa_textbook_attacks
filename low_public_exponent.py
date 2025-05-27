@@ -4,9 +4,13 @@ from rsa_textbook_attacks.basic_rsa import encrypt
 
 
 class LowPublicExponent():
-    def attack(self, cipher: int, e: int) -> int:
+    @staticmethod
+    def attack(cipher: int, e: int) -> int:
         from primefac import introot
-        return introot(cipher, e)
+        result = introot(cipher, e)
+        if result is None:
+            raise ValueError("introot failed to find a root")
+        return result
 
 
 def main():

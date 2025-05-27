@@ -28,8 +28,8 @@ class BlindingN():
         from math import gcd
         assert len(encryped) == 2
         c1, c2 = encryped
-        a, b = self.values_to_encrypt
-        return gcd(a**e - c1, b**e - c2)
+        m1, m2 = self.values_to_encrypt
+        return gcd(m1**e - c1, m2**e - c2)
 
     def blind_n_no_e(self, encryped: list) -> int:
         from math import gcd

@@ -6,7 +6,7 @@ from math import gcd
 
 class CommonModulus():
     @staticmethod
-    def attack(cipher1:int, cipher2:int, e1:int , e2:int , n:int ):
+    def attack(c1:int, c2:int, e1:int , e2:int , n:int):
         """ 
         finds the original message when it's encrypted with two different public keys with the same modulus  
         egcd finds u,v such that u\*e1 + v\*e2 = 1  
@@ -15,7 +15,7 @@ class CommonModulus():
         from egcd import egcd
         r, u, v = egcd(e1, e2)
         assert r == 1, "e1 and e2 are not coprime"
-        return pow(cipher1, u, n) * pow(cipher2, v, n) % n
+        return pow(c1, u, n) * pow(c2, v, n) % n
 
 
 def main():
