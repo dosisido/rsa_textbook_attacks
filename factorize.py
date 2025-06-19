@@ -9,9 +9,6 @@ class Factorize():
         f = FactorDB(n)
         f.connect()
         factor_list = f.get_factor_list()
-        if len(factor_list) == 1:
-            print("No factors found, or the number is prime.")
-            return None
         factor_list.sort()
         return tuple(factor_list)
 
